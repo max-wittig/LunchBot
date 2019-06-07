@@ -1,10 +1,14 @@
 {
   "dependencies": {
     "circuit-sdk": "^1.2.6100",
-    "cron": "^1.7.1"
+    "cron": "^1.7.1",
+    "node-html-parser": "^1.1.15",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "menu": "node lunch-parser.js"
   },
   "license": "SEE LICENSE IN LICENSE"
 }

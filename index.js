@@ -2,6 +2,7 @@
 const process = require("process");
 const Circuit = require("circuit-sdk");
 const CronJob = require("cron").CronJob;
+const get5MoodsMenu = require("./lunch-parser");
 
 CLIENT_ID = process.env.CLIENT_ID;
 CLIENT_SECRET = process.env.CLIENT_SECRET;
@@ -28,6 +29,7 @@ const VALID_LUNCH_OPTIONS = [
 ];
 const IS_TEST = true;
 
+const MENU_TIME = "00 10 * * 1-5";
 const WARNING_TIME = "20 11 * * 1-5";
 const LUNCH_TIME = "30 11 * * 1-5";
 const LUNCH_HUMAN_TIME = " [11:30]";
@@ -82,6 +84,19 @@ client.addEventListener("itemAdded", item => {
 client
   .logon()
   .then(() => {
+    let response = {
+      convId: "",
+      parentId: "",
+      content: ""
+    };
+    new CronJob(MENU_TIME, () => {
+      get5MoodsMenu(menuText => {
+        client.addTextItem(CONVERSATION_ID, menuText).then(item => {
+          response.convId = item.convId;
+          response.parentId = item.parentId;
+        });
+      });
+    });
     new CronJob(
       WARNING_TIME,
       () => {
@@ -95,11 +110,6 @@ client
             const letsGoJob = new CronJob(
               LUNCH_TIME,
               () => {
-                let response = {
-                  convId: item.convId,
-                  parentId: item.itemId,
-                  content: ""
-                };
                 if (lunchParticipients.length > 0) {
                   response.content =
                     LETS_GO_TEXT + lunchParticipients.toString();
