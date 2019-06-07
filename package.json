@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "circuit-sdk": "^1.2.6100",
+    "cron": "^1.7.1"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}
