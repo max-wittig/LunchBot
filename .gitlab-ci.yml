@@ -5,6 +5,7 @@ stages:
   - deploy
 
 lint-prettier:
+  stage: lint
   before_script:
     - yarn
   script:
