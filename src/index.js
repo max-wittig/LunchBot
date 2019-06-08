@@ -32,6 +32,8 @@ const VALID_LUNCH_OPTIONS = [
   "yep",
   "jep",
   "natürlich",
+  "klar",
+  "isch guat",
   "+1",
   "y"
 ];
