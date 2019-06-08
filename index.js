@@ -4,16 +4,17 @@ const Circuit = require("circuit-sdk");
 const CronJob = require("cron").CronJob;
 const get5MoodsMenu = require("./lunch-parser");
 
-CLIENT_ID = process.env.CLIENT_ID;
-CLIENT_SECRET = process.env.CLIENT_SECRET;
-CONVERSATION_ID = process.env.CONVERSATION_ID;
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const CONVERSATION_ID = process.env.CONVERSATION_ID;
 
 if (!CLIENT_ID || !CLIENT_SECRET || !CONVERSATION_ID) {
   console.error("Please set the required variables!");
   process.exit(1);
 }
 
-DOMAIN = process.env.DOMAIN || "circuitsandbox.net";
+const DOMAIN = process.env.DOMAIN || "circuitsandbox.net";
+const TIMEZONE = "Europe/Zurich";
 
 const VALID_LUNCH_OPTIONS = [
   "ok",
@@ -29,12 +30,21 @@ const VALID_LUNCH_OPTIONS = [
 ];
 const IS_TEST = true;
 
-const MENU_TIME = "00 10 * * 1-5";
-const WARNING_TIME = "20 11 * * 1-5";
-const LUNCH_TIME = "30 11 * * 1-5";
+let MENU_TIME;
+let WARNING_TIME;
+let LUNCH_TIME;
+if (IS_TEST) {
+  MENU_TIME = "*/5 * * * *";
+  WARNING_TIME = "*/2 * * * *";
+  LUNCH_TIME = "* * * * *";
+} else {
+  MENU_TIME = "00 10 * * 1-5";
+  WARNING_TIME = "20 11 * * 1-5";
+  LUNCH_TIME = "30 11 * * 1-5";
+}
+
 const LUNCH_HUMAN_TIME = " [11:30]";
 
-const CHAT_ID = process.env.CIRCUIT_CHAT_ID;
 const PLEASE_JOIN_TEXT = "Please write 'yes' to join the lunch for today.";
 const LETS_GO_TEXT = "Let's go. These people are joining: ";
 const NOBODY_JOINS_TEXT = "Nobody is joining Lunch today.";
@@ -84,50 +94,55 @@ client.addEventListener("itemAdded", item => {
 client
   .logon()
   .then(() => {
-    let response = {
-      convId: "",
-      parentId: "",
-      content: ""
-    };
-    new CronJob(MENU_TIME, () => {
-      get5MoodsMenu(menuText => {
-        client.addTextItem(CONVERSATION_ID, menuText).then(item => {
-          response.convId = item.convId;
-          response.parentId = item.parentId;
-        });
-      });
-    });
     new CronJob(
-      WARNING_TIME,
+      MENU_TIME,
       () => {
-        lunchParticipients.length = 0;
-        client
-          .addTextItem(
-            CONVERSATION_ID,
-            randomLunchSpeak() + " " + PLEASE_JOIN_TEXT
-          )
-          .then(item => {
-            const letsGoJob = new CronJob(
-              LUNCH_TIME,
+        get5MoodsMenu(menuText => {
+          console.info("Add menu");
+          client.addTextItem(CONVERSATION_ID, menuText).then(item => {
+            let response = {
+              convId: item.convId,
+              parentId: item.itemId,
+              content: ""
+            };
+            const lunchQuestion = new CronJob(
+              WARNING_TIME,
               () => {
-                if (lunchParticipients.length > 0) {
-                  response.content =
-                    LETS_GO_TEXT + lunchParticipients.toString();
-                } else {
-                  response.content = NOBODY_JOINS_TEXT;
-                }
-                client.addTextItem(item.convId, response);
-                letsGoJob.stop();
+                lunchParticipients.length = 0;
+                response.content = randomLunchSpeak() + " " + PLEASE_JOIN_TEXT;
+                client.addTextItem(response.convId, response).then(item => {
+                  console.info("Add lunchQuestion");
+                  const letsGoJob = new CronJob(
+                    LUNCH_TIME,
+                    () => {
+                      if (lunchParticipients.length > 0) {
+                        response.content =
+                          LETS_GO_TEXT + lunchParticipients.toString();
+                      } else {
+                        response.content = NOBODY_JOINS_TEXT;
+                      }
+                      client.addTextItem(response.convId, response);
+                      console.info("Add letsgo");
+                      letsGoJob.stop();
+                      lunchQuestion.stop();
+                    },
+                    null,
+                    true,
+                    TIMEZONE
+                  );
+                });
               },
               null,
               true,
-              "Europe/Zurich"
+              TIMEZONE
             );
           });
+          
+        });
       },
       null,
       true,
-      "Europe/Zurich"
+      TIMEZONE
     );
   })
   .catch(e => {
