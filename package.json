@@ -2,13 +2,18 @@
   "dependencies": {
     "circuit-sdk": "^1.2.6100",
     "cron": "^1.7.1",
+    "cron-parser": "^2.11.0",
     "node-html-parser": "^1.1.15",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
   },
   "scripts": {
-    "start": "node index.js",
-    "menu": "node lunch-parser.js"
+    "start": "node src/index.js",
+    "menu": "node src/lunch-parser.js",
+    "lint:prettier": "prettier --check src/*.js"
   },
-  "license": "SEE LICENSE IN LICENSE"
+  "license": "SEE LICENSE IN LICENSE",
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  }
 }
