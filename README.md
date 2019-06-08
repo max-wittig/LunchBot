@@ -34,4 +34,7 @@ docker build -t lunchbot .
 
 # run the bot
 docker run --rm -d -e CLIENT_ID=$CLIENT_ID -e CLIENT_SECRET=$CLIENT_SECRET -e CONVERSATION_ID=$CONVERSATION_ID lunchbot
+
+# or use the upstream image directly
+docker run --rm -d -e CLIENT_ID=$CLIENT_ID -e CLIENT_SECRET=$CLIENT_SECRET -e CONVERSATION_ID=$CONVERSATION_ID registry.gitlab.com/max-wittig/lunchbot:latest
 ```
