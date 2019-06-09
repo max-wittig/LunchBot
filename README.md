@@ -22,9 +22,7 @@ yarn start
 * MENU_TIME_CRON : cron string, when to send the menu to the conversation. Defaults to `00 10 * * 1-5`
 * WARNING_TIME_CRON : cron string, when to ask if anyone is joining. Defaults to `20 11 * * 1-5`
 * LUNCH_TIME_CRON : cron string, when to send go to lunch message. Defaults to `30 11 * * 1-5`
-
-The domain can also be specified by setting the `DOMAIN` variable.
-Defaults to `circuitsandbox.net`
+* TIMEZONE : specify the timezone the bot is running in. Defaults to `Europe/Zurich`
 
 ## Docker usage
 

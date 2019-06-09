@@ -1,4 +1,3 @@
-// No client_secret needed for Implicit Grant. SDK will obtain access token.
 const process = require("process");
 const Circuit = require("circuit-sdk");
 const CronJob = require("cron").CronJob;
@@ -21,7 +20,7 @@ if (!CLIENT_ID || !CLIENT_SECRET || !CONVERSATION_ID) {
 console.info(`TEST_MODE is ${TEST_MODE}`);
 
 const DOMAIN = process.env.DOMAIN || "circuitsandbox.net";
-const TIMEZONE = "Europe/Zurich";
+const TIMEZONE = process.env.TIMEZONE || "Europe/Zurich";
 
 const VALID_LUNCH_OPTIONS = [
   "ok",
