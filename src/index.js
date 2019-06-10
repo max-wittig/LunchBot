@@ -131,10 +131,10 @@ const client = new Circuit.Client({
   autoRenewToken: true
 });
 
-process.on('unhandledRejection', (reason) => {
-  console.error('Unhandled Rejection at:', reason.stack || reason);
+process.on("unhandledRejection", reason => {
+  console.error("Unhandled Rejection at:", reason.stack || reason);
   throw reason;
-})
+});
 
 client.addEventListener("itemAdded", item => {
   item = item.item;
