@@ -127,7 +127,8 @@ const setupClient = client => {
 const client = new Circuit.Client({
   client_id: CLIENT_ID,
   client_secret: CLIENT_SECRET,
-  domain: DOMAIN
+  domain: DOMAIN,
+  autoRenewToken: true
 });
 
 client.addEventListener("itemAdded", item => {
