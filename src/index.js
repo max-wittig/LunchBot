@@ -22,6 +22,7 @@ console.info(`TEST_MODE is ${TEST_MODE}`);
 
 const DOMAIN = process.env.DOMAIN || "circuitsandbox.net";
 const TIMEZONE = process.env.TIMEZONE || "Europe/Zurich";
+const SCOPE = process.env.SCOPE;
 
 const VALID_LUNCH_OPTIONS = [
   "ok",
@@ -129,7 +130,8 @@ const client = new Circuit.Client({
   client_id: CLIENT_ID,
   client_secret: CLIENT_SECRET,
   domain: DOMAIN,
-  autoRenewToken: true
+  autoRenewToken: true,
+  scope: SCOPE
 });
 
 process.on("unhandledRejection", reason => {
@@ -162,7 +164,7 @@ client
     new CronJob(
       MENU_TIME,
       async () => {
-        const menu = await get5MoodsMenu();
+        const menuText = await get5MoodsMenu();
         console.info("Add menu");
         startConversation(client, menuText);
       },

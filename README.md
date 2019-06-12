@@ -23,6 +23,7 @@ yarn start
 * WARNING_TIME_CRON : cron string, when to ask if anyone is joining. Defaults to `20 11 * * 1-5`
 * LUNCH_TIME_CRON : cron string, when to send go to lunch message. Defaults to `30 11 * * 1-5`
 * TIMEZONE : specify the timezone the bot is running in. Defaults to `Europe/Zurich`
+* SCOPE : define Circuit application scopes. Defaults to `null`
 
 ## Docker usage
 

@@ -9,15 +9,15 @@ const getMenu = async () => {
 };
 
 const isCurrentUserMention = (client, item) => {
-    if (!item.text || !item.text.mentionedUsers) {
-        return false;
-    }
-    const userId = client.loggedOnUser.userId;
-    return item.text.mentionedUsers.includes(userId);
-}
+  if (!item.text || !item.text.mentionedUsers) {
+    return false;
+  }
+  const userId = client.loggedOnUser.userId;
+  return item.text.mentionedUsers.includes(userId);
+};
 
-const getRegex = (command) => {
-    return `@.*\/${command}.*$`
+const getRegex = command => {
+  return `@.*\/${command}.*$`;
 };
 
 const parseCommand = async (client, item) => {
