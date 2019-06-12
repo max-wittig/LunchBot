@@ -8,8 +8,20 @@ const getMenu = async () => {
   return await get5moodsMenu();
 };
 
+const isCurrentUserMention = (client, item) => {
+    if (!item.text || !item.text.mentionedUsers) {
+        return false;
+    }
+    const userId = client.loggedOnUser.userId;
+    return item.text.mentionedUsers.includes(userId);
+}
+
+const getRegex = (command) => {
+    return `@.*\/${command}.*$`
+};
+
 const parseCommand = async (client, item) => {
-  if (!item.text) {
+  if (!isCurrentUserMention(client, item)) {
     return;
   }
   const message = item.text.content;
@@ -23,10 +35,16 @@ const parseCommand = async (client, item) => {
     content: ""
   };
 
-  if (message.match("^/status$")) {
+  if (message.match(getRegex("status"))) {
+    console.info("Got status request");
     response.content = getStatus(item, response);
-  } else if (message.match("^/menu$")) {
+  } else if (message.match(getRegex("menu"))) {
+    console.info("Got menu request");
     response.content = await getMenu();
+  }
+
+  if (!response.content) {
+    response.content = `${item.text.content} is not a known command`;
   }
 
   client.addTextItem(response.convId, response);
