@@ -2,6 +2,7 @@ const process = require("process");
 const Circuit = require("circuit-sdk");
 const CronJob = require("cron").CronJob;
 const get5MoodsMenu = require("./lunch-parser");
+const parseCommand = require("./command-parser");
 const cronParser = require("cron-parser");
 
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -136,12 +137,13 @@ process.on("unhandledRejection", reason => {
   throw reason;
 });
 
-client.addEventListener("itemAdded", item => {
+client.addEventListener("itemAdded", async item => {
   item = item.item;
   const itemCreator = item.creatorId;
   if (itemCreator == client.loggedOnUser.userId) {
     return;
   }
+  await parseCommand(client, item);
   const itemMessage = item.text.content;
   if (isValidLunchConfirmation(itemMessage)) {
     client.getUserById(itemCreator).then(result => {
@@ -159,11 +161,10 @@ client
     setupClient(client);
     new CronJob(
       MENU_TIME,
-      () => {
-        get5MoodsMenu(menuText => {
-          console.info("Add menu");
-          startConversation(client, menuText);
-        });
+      async () => {
+        const menu = await get5MoodsMenu();
+        console.info("Add menu");
+        startConversation(client, menuText);
       },
       null,
       true,
