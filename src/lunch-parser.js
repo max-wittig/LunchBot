@@ -1,5 +1,4 @@
 const parse = require("node-html-parser").parse;
-const http = require("http");
 const request = require("request-promise");
 
 async function get5MoodsMenu(callback) {
