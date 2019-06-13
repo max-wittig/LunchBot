@@ -47,7 +47,9 @@ const parseCommand = async (client, item) => {
     response.content = `${item.text.content} is not a known command`;
   }
 
-  client.addTextItem(response.convId, response);
+  client.addTextItem(response.convId, response).catch((err) => {
+    console.error(err);
+  });
 };
 
 module.exports = parseCommand;

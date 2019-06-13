@@ -103,7 +103,9 @@ const startConversation = (client, menuText) => {
               } else {
                 response.content = NOBODY_JOINS_TEXT;
               }
-              client.addTextItem(response.convId, response);
+              client.addTextItem(response.convId, response).catch((err) => {
+                console.error(err);
+              });
               console.info("Added LetsGoMessage");
               letsGoJob.stop();
               lunchQuestion.stop();
