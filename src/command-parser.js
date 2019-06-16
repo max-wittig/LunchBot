@@ -1,4 +1,5 @@
 const get5moodsMenu = require("./lunch-parser");
+const lunchManager = require("./lunch-manager");
 
 const getStatus = item => {
   return "Up and running";
@@ -25,6 +26,9 @@ const parseCommand = async (client, item) => {
     return;
   }
   const message = item.text.content;
+  const creatorId = item.creatorId;
+  const conversationId = item.convId;
+  console.info(item);
   if (!message.match("/")) {
     // not a command
     return;
@@ -41,13 +45,30 @@ const parseCommand = async (client, item) => {
   } else if (message.match(getRegex("menu"))) {
     console.info("Got menu request");
     response.content = await getMenu();
+  } else if (message.match(getRegex("subscribe"))) {
+    const user = await client.getUserById(creatorId);
+    response.content = await lunchManager.subscribe(
+      new lunchManager.LunchSubscription(
+        conversationId,
+        creatorId,
+        user.displayName
+      )
+    );
+    await lunchManager.updateCrons(client);
+  } else if (message.match(getRegex("unsubscribe"))) {
+    const user = await client.getUserById(creatorId);
+    response.content = await lunchManager.unsubscribe(
+      conversationId,
+      user.displayName
+    );
+    await lunchManager.updateCrons(client);
   }
 
   if (!response.content) {
     response.content = `${item.text.content} is not a known command`;
   }
 
-  client.addTextItem(response.convId, response).catch((err) => {
+  client.addTextItem(response.convId, response).catch(err => {
     console.error(err);
   });
 };

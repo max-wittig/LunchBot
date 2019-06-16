@@ -1,7 +1,7 @@
 const parse = require("node-html-parser").parse;
 const request = require("request-promise");
 
-async function get5MoodsMenu(callback) {
+async function get5MoodsMenu() {
   const url = "http://siemens.sv-restaurant.ch/de/menuplan/five-moods/";
   let text = "";
   const result = await request(url);

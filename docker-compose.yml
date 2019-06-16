@@ -1,0 +1,24 @@
+version: "3.3"
+
+services:
+  lunchbot:
+    build:
+      context: .
+    image: lunchbot:${VERSION-latest}
+    container_name: lunchbot
+    restart: on-failure
+    depends_on:
+      - lunchbot-db
+    environment:
+      CLIENT_ID: "${CLIENT_ID}"
+      CLIENT_SECRET: "${CLIENT_SECRET}"
+      DOMAIN: "${DOMAIN}"
+      SCOPE: "${SCOPE}"
+      MONGO_HOST: lunchbot-db
+
+  lunchbot-db:
+    image: mongo:latest
+    container_name: lunchbot-db
+    expose:
+      - "27017"
+    restart: on-failure
