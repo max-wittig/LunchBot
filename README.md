@@ -24,7 +24,6 @@ yarn start
 * MENU_TIME_CRON : cron string, when to send the menu to the conversation. Defaults to `00 10 * * 1-5`
 * WARNING_TIME_CRON : cron string, when to ask if anyone is joining. Defaults to `20 11 * * 1-5`
 * LUNCH_TIME_CRON : cron string, when to send go to lunch message. Defaults to `30 11 * * 1-5`
-* TIMEZONE : specify the timezone the bot is running in. Defaults to `Europe/Zurich`
 * SCOPE : define Circuit application scopes. Defaults to `null`
 * MONGO_HOST : hostname that your mongodb is running on. Defaults to `localhost`
 * MONGO_PORT : port that mongodb listens on. Defaults to `27017`
@@ -59,3 +58,4 @@ You can requests the following information everytime, using slash command:
 * /unsubscribe -> unsubscribe from the conversation to receive the menu
 * /status -> display status message, if bot is up and running
 * /menu -> show lunch menu for today
+* /source -> show source of the bot

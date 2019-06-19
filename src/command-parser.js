@@ -62,6 +62,8 @@ const parseCommand = async (client, item) => {
       user.displayName
     );
     await lunchManager.updateCrons(client);
+  } else if (message.match("source")) {
+    response.content = "https://github.com/max-wittig/LunchBot"
   }
 
   if (!response.content) {
