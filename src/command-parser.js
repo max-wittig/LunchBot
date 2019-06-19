@@ -1,8 +1,9 @@
 const get5moodsMenu = require("./lunch-parser");
 const lunchManager = require("./lunch-manager");
 
-const getStatus = item => {
-  return "Up and running";
+const getStatus = async () => {
+  const subscribers = await lunchManager.getSubscriberNumbers();
+  return `Up and running\nCounting ${subscribers} subscribers`;
 };
 
 const getMenu = async () => {
@@ -28,7 +29,6 @@ const parseCommand = async (client, item) => {
   const message = item.text.content;
   const creatorId = item.creatorId;
   const conversationId = item.convId;
-  console.info(item);
   if (!message.match("/")) {
     // not a command
     return;
@@ -41,7 +41,8 @@ const parseCommand = async (client, item) => {
 
   if (message.match(getRegex("status"))) {
     console.info("Got status request");
-    response.content = getStatus(item, response);
+    y;
+    response.content = await getStatus(item, response);
   } else if (message.match(getRegex("menu"))) {
     console.info("Got menu request");
     response.content = await getMenu();

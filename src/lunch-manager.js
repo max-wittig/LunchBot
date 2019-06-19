@@ -85,6 +85,11 @@ const unsubscribe = async (conversationId, userName) => {
   return `Subscription to ${conversationId} deleted by ${userName}`;
 };
 
+const getSubscriberNumbers = async () => {
+  const stats = await db.collection(subscriberCollectionName).stats();
+  return stats["count"];
+};
+
 const lunchTimeDate = cronParser
   .parseExpression(LUNCH_TIME)
   .next()
@@ -246,5 +251,6 @@ module.exports = {
   unsubscribe: unsubscribe,
   LunchSubscription: LunchSubscription,
   updateCrons: updateCrons,
-  checkLunchResponse: checkLunchResponse
+  checkLunchResponse: checkLunchResponse,
+  getSubscriberNumbers: getSubscriberNumbers
 };
