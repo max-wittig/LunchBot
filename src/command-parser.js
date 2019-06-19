@@ -1,9 +1,20 @@
 const get5moodsMenu = require("./lunch-parser");
 const lunchManager = require("./lunch-manager");
+const uuid4 = require("uuid/v4");
+const childProcess = require("child_process");
 
 const getStatus = async () => {
   const subscribers = await lunchManager.getSubscriberNumbers();
-  return `Up and running\nCounting ${subscribers} subscribers`;
+  let gitHash;
+  try {
+    gitHash = childProcess
+      .execSync("git rev-parse HEAD")
+      .toString()
+      .substring(0, 7);
+  } catch (err) {
+    gitHash = "not a git repository";
+  }
+  return `Bot-UUID: ${uuid4()}\nHEAD at: ${gitHash}\nUp and running\nCounting ${subscribers} subscribers`;
 };
 
 const getMenu = async () => {
@@ -63,7 +74,7 @@ const parseCommand = async (client, item) => {
     );
     await lunchManager.updateCrons(client);
   } else if (message.match("source")) {
-    response.content = "https://github.com/max-wittig/LunchBot"
+    response.content = "https://github.com/max-wittig/LunchBot";
   }
 
   if (!response.content) {
