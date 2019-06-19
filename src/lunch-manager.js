@@ -14,6 +14,10 @@ let db;
 mongoClient.connect(err => {
   console.debug("Connected to mongodb");
   db = mongoClient.db(dbName);
+  if (err) {
+    console.error(err);
+    process.exit(3);
+  }
 });
 const subscriberCollectionName = "subscribers";
 

@@ -41,7 +41,6 @@ const parseCommand = async (client, item) => {
 
   if (message.match(getRegex("status"))) {
     console.info("Got status request");
-    y;
     response.content = await getStatus(item, response);
   } else if (message.match(getRegex("menu"))) {
     console.info("Got menu request");
