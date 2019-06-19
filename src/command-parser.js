@@ -3,6 +3,8 @@ const lunchManager = require("./lunch-manager");
 const uuid4 = require("uuid/v4");
 const childProcess = require("child_process");
 
+const BOT_UUID = uuid4();
+
 const getStatus = async () => {
   const subscribers = await lunchManager.getSubscriberNumbers();
   let gitHash;
@@ -14,7 +16,7 @@ const getStatus = async () => {
   } catch (err) {
     gitHash = "not a git repository";
   }
-  return `Bot-UUID: ${uuid4()}\nHEAD at: ${gitHash}\nUp and running\nCounting ${subscribers} subscribers`;
+  return `Bot-UUID: ${BOT_UUID}\nHEAD at: ${gitHash}\nUp and running\nCounting ${subscribers} subscribers`;
 };
 
 const getMenu = async () => {
