@@ -90,8 +90,12 @@ const unsubscribe = async (conversationId, userName) => {
 };
 
 const getSubscriberNumbers = async () => {
-  const stats = await db.collection(subscriberCollectionName).stats();
-  return stats["count"];
+  try {
+    const stats = await db.collection(subscriberCollectionName).stats();
+    return stats["count"];
+  } catch (err) {
+    return 0;
+  }
 };
 
 const lunchTimeDate = cronParser
