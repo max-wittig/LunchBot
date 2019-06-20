@@ -1,0 +1,20 @@
+name: lunchbot
+namespace: lunchbot
+general_secrets_name: lunchbot-secrets
+
+bot:
+  name: lunchbot
+  image: registry.gitlab.com/max-wittig/lunchbot
+  imageTag: latest
+  env:
+    client_id:
+    client_secret:
+    domain:
+
+mongo:
+  name: mongo
+  usePassword: false
+  securityContext:
+    enabled: false
+  persistence:
+    existingClaim: mongo-volume

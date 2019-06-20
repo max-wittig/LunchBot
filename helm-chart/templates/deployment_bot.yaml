@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Values.bot.name | quote }}
+  labels:
+    app: {{ .Values.name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.bot.name | quote }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.bot.name | quote }}
+        release: {{ .Release.Name }}
+        revision: "{{ .Release.Revision }}"
+    spec:
+      containers:
+        - name: {{ .Values.bot.name | quote }}
+          image: "{{ .Values.bot.image }}:{{ .Values.bot.imageTag }}"
+          imagePullPolicy: Always
+          env:
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.general_secrets_name | quote }}
+                  key: client_id
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.general_secrets_name | quote }}
+                  key: client_secret
+            - name: DOMAIN
+              value: {{ .Values.bot.env.domain }}
+            - name: MONGO_HOST
+              value: "lunchbot-{{ .Values.mongo.name }}"
