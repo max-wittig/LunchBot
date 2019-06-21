@@ -59,3 +59,29 @@ You can requests the following information everytime, using slash command:
 * /status -> display status message, if bot is up and running
 * /menu -> show lunch menu for today
 * /source -> show source of the bot
+
+### Options
+
+While running some of the command above you can additionally also specify
+some settings in yaml format.
+
+You can always specify for which instance the command should be executed. 
+This is useful for debugging, when multiple instances are running with the same
+variables. You can check the UUID using the `/status` command.
+
+Examples:
+```
+@LunchBot /menu
+uuid: <some-uuid>
+```
+
+Special command options:
+
+* timezone -> specifc the timezone the cron should be in. Defaults to `Europe/Zurich`
+* cron -> specifc custom menu cron. Defaults to `0 10 * * 1-5`
+
+```
+@LunchBot /subscribe
+timezone: Europe/Zurich
+cron: 0 11 * * *
+```
