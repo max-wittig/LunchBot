@@ -3,6 +3,7 @@
     "circuit-sdk": "^1.2.6100",
     "cron": "^1.7.1",
     "cron-parser": "^2.11.0",
+    "js-yaml": "^3.13.1",
     "mongodb": "^3.2.7",
     "node-html-parser": "^1.1.15",
     "request": "^2.88.0",

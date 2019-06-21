@@ -2,6 +2,8 @@ const get5moodsMenu = require("./lunch-parser");
 const lunchManager = require("./lunch-manager");
 const uuid4 = require("uuid/v4");
 const childProcess = require("child_process");
+const yaml = require("js-yaml");
+const cronParser = require("cron-parser");
 
 const BOT_UUID = uuid4();
 
@@ -32,7 +34,51 @@ const isCurrentUserMention = (client, item) => {
 };
 
 const getRegex = command => {
-  return `@.*\/${command}.*$`;
+  return `(@.*\/${command})(.*$)`;
+};
+
+const convertCron = cronString => {
+  if (!cronString) {
+    return undefined;
+  }
+  try {
+    const expression = cronParser.parseExpression(cronString);
+    const expressionOne = expression.next();
+    const expressionTwo = expression.next();
+    const intervalMs = expressionTwo.toDate() - expressionOne.toDate();
+    const minInterval = 10 * 60 * 1000; // 10 min
+    if (intervalMs < minInterval) {
+      // you should only be able to send a mesage every `minInterval`
+      console.debug(`Increased cron interval to ${minInterval}`);
+      return "0 10 * * 1-5";
+    } else {
+      return cronString;
+    }
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
+};
+
+const getOptions = message => {
+  message = message.replace(/\<br\>/g, "\n\n").trim();
+  // matches things after the command so it can be parsed as yaml
+  const groups = message.match(/(@.*\/\S*?\s)([\S\s]*)/);
+  if (!groups) {
+    return {};
+  }
+  let optionsString = groups[2].toString();
+  if (!optionsString) {
+    return {};
+  }
+  try {
+    return yaml.safeLoad(optionsString);
+  } catch (err) {
+    if (err) {
+      console.error(err);
+      return {};
+    }
+  }
 };
 
 const parseCommand = async (client, item) => {
@@ -52,6 +98,11 @@ const parseCommand = async (client, item) => {
     content: ""
   };
 
+  const options = getOptions(message);
+  if (options["uuid"] && options["uuid"] !== BOT_UUID) {
+    return;
+  }
+
   if (message.match(getRegex("status"))) {
     console.info("Got status request");
     response.content = await getStatus(item, response);
@@ -64,7 +115,9 @@ const parseCommand = async (client, item) => {
       new lunchManager.LunchSubscription(
         conversationId,
         creatorId,
-        user.displayName
+        user.displayName,
+        options["timezone"],
+        convertCron(options["cron"])
       )
     );
     await lunchManager.updateCrons(client);

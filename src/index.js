@@ -23,7 +23,8 @@ const client = new Circuit.Client({
   client_id: CLIENT_ID,
   client_secret: CLIENT_SECRET,
   domain: DOMAIN,
-  scope: SCOPE
+  scope: SCOPE,
+  removeMentionHtml: true
 });
 
 process.on("unhandledRejection", reason => {
