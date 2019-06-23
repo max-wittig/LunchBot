@@ -4,8 +4,10 @@ const uuid4 = require("uuid/v4");
 const childProcess = require("child_process");
 const yaml = require("js-yaml");
 const cronParser = require("cron-parser");
+const moment = require("moment-timezone");
 
 const BOT_UUID = uuid4();
+console.info(`Started with UUID ${BOT_UUID}`)
 
 const getStatus = async () => {
   const subscribers = await lunchManager.getSubscriberNumbers();
@@ -18,7 +20,10 @@ const getStatus = async () => {
   } catch (err) {
     gitHash = "not a git repository";
   }
-  return `Bot-UUID: ${BOT_UUID}\nHEAD at: ${gitHash}\nUp and running\nCounting ${subscribers} subscribers`;
+  return `Bot-UUID: ${BOT_UUID}
+HEAD at: ${gitHash}
+Up and running
+Counting ${subscribers} subscribers`;
 };
 
 const getMenu = async () => {
@@ -58,6 +63,14 @@ const convertCron = cronString => {
     console.error(err);
     return undefined;
   }
+};
+
+const isValidTimeZone = timeZone => {
+  if (!timeZone) {
+    // we accept undefined timezones, so we can use the default
+    return true;
+  }
+  return moment.tz.names().includes(timeZone);
 };
 
 const getOptions = message => {
@@ -111,16 +124,26 @@ const parseCommand = async (client, item) => {
     response.content = await getMenu();
   } else if (message.match(getRegex("subscribe"))) {
     const user = await client.getUserById(creatorId);
-    response.content = await lunchManager.subscribe(
-      new lunchManager.LunchSubscription(
-        conversationId,
-        creatorId,
-        user.displayName,
-        options["timezone"],
-        convertCron(options["cron"])
-      )
-    );
-    await lunchManager.updateCrons(client);
+    const timeZone = options["timezone"];
+    if (isValidTimeZone(timeZone)) {
+      response.content = await lunchManager.subscribe(
+        new lunchManager.LunchSubscription(
+          conversationId,
+          creatorId,
+          user.displayName,
+          timeZone,
+          convertCron(options["cron"])
+        )
+      );
+
+      const err = await lunchManager.updateCrons(client);
+      console.info(err);
+      if (err) {
+        response.content = "Could not create subscription";
+      }
+    } else {
+      response.content = "Could not subscribe. Timezone is invalid";
+    }
   } else if (message.match(getRegex("unsubscribe"))) {
     const user = await client.getUserById(creatorId);
     response.content = await lunchManager.unsubscribe(

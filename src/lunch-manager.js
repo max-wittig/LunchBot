@@ -194,21 +194,32 @@ const sendLunchMenu = async (client, subscriber) => {
 const updateCrons = async client => {
   const subscriberCollection = db.collection(subscriberCollectionName);
   stopAllCrons();
-  await subscriberCollection.find().forEach(subscriber => {
-    const cronJob = new CronJob(
-      subscriber.cron,
-      async () => {
-        try {
-          await sendLunchMenu(client, subscriber);
-        } catch (err) {
-          console.error(err);
-        }
-      },
-      null,
-      true,
-      subscriber.timeZone
-    );
-    loadedCrons.push(cronJob);
+  await subscriberCollection.find().forEach(async subscriber => {
+    let cronJob;
+    try {
+      cronJob = new CronJob(
+        subscriber.cron,
+        async () => {
+          try {
+            await sendLunchMenu(client, subscriber);
+          } catch (err) {
+            console.error(err);
+            return err;
+          }
+        },
+        null,
+        true,
+        subscriber.timeZone
+      );
+      loadedCrons.push(cronJob);
+    } catch (err) {
+      console.error("Could not add cronjob. Removing...");
+      try {
+        await subscriberCollection.deleteOne({ conversationId: subscriber.conversationId });
+      } catch (err) {
+        console.error(`Could not delete subscription ${err}`);
+      }
+    }
   });
 };
 
