@@ -18,7 +18,10 @@ const getStatus = async () => {
   } catch (err) {
     gitHash = "not a git repository";
   }
-  return `Bot-UUID: ${BOT_UUID}\nHEAD at: ${gitHash}\nUp and running\nCounting ${subscribers} subscribers`;
+  return `Bot-UUID: ${BOT_UUID}
+HEAD at: ${gitHash}
+Up and running
+Counting ${subscribers} subscribers`;
 };
 
 const getMenu = async () => {
@@ -120,7 +123,12 @@ const parseCommand = async (client, item) => {
         convertCron(options["cron"])
       )
     );
-    await lunchManager.updateCrons(client);
+
+    const err = await lunchManager.updateCrons(client);
+    console.info(err);
+    if (err) {
+      response.content = "Could not create subscription";
+    }
   } else if (message.match(getRegex("unsubscribe"))) {
     const user = await client.getUserById(creatorId);
     response.content = await lunchManager.unsubscribe(

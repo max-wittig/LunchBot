@@ -195,20 +195,26 @@ const updateCrons = async client => {
   const subscriberCollection = db.collection(subscriberCollectionName);
   stopAllCrons();
   await subscriberCollection.find().forEach(subscriber => {
-    const cronJob = new CronJob(
-      subscriber.cron,
-      async () => {
-        try {
-          await sendLunchMenu(client, subscriber);
-        } catch (err) {
-          console.error(err);
-        }
-      },
-      null,
-      true,
-      subscriber.timeZone
-    );
-    loadedCrons.push(cronJob);
+    let cronJob;
+    try {
+      cronJob = new CronJob(
+        subscriber.cron,
+        async () => {
+          try {
+            await sendLunchMenu(client, subscriber);
+          } catch (err) {
+            console.error(err);
+          }
+        },
+        null,
+        true,
+        subscriber.timeZone
+      );
+      loadedCrons.push(cronJob);
+    } catch (err) {
+      console.error("Could not add cronjob");
+      return "Could not add cronjob";
+    }
   });
 };
 
