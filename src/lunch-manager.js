@@ -215,7 +215,9 @@ const updateCrons = async client => {
     } catch (err) {
       console.error("Could not add cronjob. Removing...");
       try {
-        await subscriberCollection.deleteOne({ conversationId: subscriber.conversationId });
+        await subscriberCollection.deleteOne({
+          conversationId: subscriber.conversationId
+        });
       } catch (err) {
         console.error(`Could not delete subscription ${err}`);
       }

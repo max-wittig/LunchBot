@@ -7,7 +7,7 @@ const cronParser = require("cron-parser");
 const moment = require("moment-timezone");
 
 const BOT_UUID = uuid4();
-console.info(`Started with UUID ${BOT_UUID}`)
+console.info(`Started with UUID ${BOT_UUID}`);
 
 const getStatus = async () => {
   const subscribers = await lunchManager.getSubscriberNumbers();
