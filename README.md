@@ -27,6 +27,7 @@ yarn start
 * SCOPE : define Circuit application scopes. Defaults to `null`
 * MONGO_HOST : hostname that your mongodb is running on. Defaults to `localhost`
 * MONGO_PORT : port that mongodb listens on. Defaults to `27017`
+* MONGO_URL  : instead of using `MONGO_HOST` and `MONGO_PORT`, as direct URL can also be used
 
 ## Docker usage
 
