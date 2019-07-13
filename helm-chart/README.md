@@ -39,7 +39,7 @@
 1. Decrypt the secrets file in the repository
 
     ```
-    sops -d values-secret.enc.yaml > values-secret.yaml
+    sops -d values-secret-enc.yaml > values-secret.yaml
     ```
 
 1. Install the chart
