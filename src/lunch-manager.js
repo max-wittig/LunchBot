@@ -13,11 +13,11 @@ const lunchParticipients = {};
 let db;
 mongoClient.connect(err => {
   console.debug("Connected to mongodb");
-  db = mongoClient.db(dbName);
   if (err) {
     console.error(err);
     process.exit(3);
   }
+  db = mongoClient.db(dbName);
 });
 const subscriberCollectionName = "subscribers";
 
@@ -90,12 +90,14 @@ const unsubscribe = async (conversationId, userName) => {
 };
 
 const getSubscriberNumbers = async () => {
-  try {
-    const stats = await db.collection(subscriberCollectionName).stats();
-    return stats["count"];
-  } catch (err) {
-    return 0;
-  }
+  return new Promise(async(resolve) => {
+    try {
+      const stats = await db.collection(subscriberCollectionName).stats();
+      resolve(stats["count"]);
+    } catch (err) {
+      resolve(0);
+    }
+  });
 };
 
 const lunchTimeDate = cronParser
