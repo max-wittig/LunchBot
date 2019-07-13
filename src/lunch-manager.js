@@ -90,7 +90,7 @@ const unsubscribe = async (conversationId, userName) => {
 };
 
 const getSubscriberNumbers = async () => {
-  return new Promise(async(resolve) => {
+  return new Promise(async resolve => {
     try {
       const stats = await db.collection(subscriberCollectionName).stats();
       resolve(stats["count"]);
