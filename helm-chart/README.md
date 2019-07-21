@@ -39,6 +39,7 @@
 1. Decrypt the secrets file in the repository
 
     ```
+    export GPG_TTY=$(tty)
     sops -d values-secret-enc.yaml > values-secret.yaml
     ```
 

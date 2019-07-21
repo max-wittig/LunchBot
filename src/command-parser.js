@@ -3,8 +3,7 @@ const lunchManager = require("./lunch-manager");
 const uuid4 = require("uuid/v4");
 const childProcess = require("child_process");
 const yaml = require("js-yaml");
-const cronParser = require("cron-parser");
-const moment = require("moment-timezone");
+const commands = require("./commands");
 
 const BOT_UUID = uuid4();
 console.info(`Started with UUID ${BOT_UUID}`);
@@ -40,37 +39,6 @@ const isCurrentUserMention = (client, item) => {
 
 const getRegex = command => {
   return `(@.*\/${command})(.*$)`;
-};
-
-const convertCron = cronString => {
-  if (!cronString) {
-    return undefined;
-  }
-  try {
-    const expression = cronParser.parseExpression(cronString);
-    const expressionOne = expression.next();
-    const expressionTwo = expression.next();
-    const intervalMs = expressionTwo.toDate() - expressionOne.toDate();
-    const minInterval = 10 * 60 * 1000; // 10 min
-    if (intervalMs < minInterval) {
-      // you should only be able to send a mesage every `minInterval`
-      console.debug(`Increased cron interval to ${minInterval}`);
-      return "0 10 * * 1-5";
-    } else {
-      return cronString;
-    }
-  } catch (err) {
-    console.error(err);
-    return undefined;
-  }
-};
-
-const isValidTimeZone = timeZone => {
-  if (!timeZone) {
-    // we accept undefined timezones, so we can use the default
-    return true;
-  }
-  return moment.tz.names().includes(timeZone);
 };
 
 const getOptions = message => {
@@ -123,27 +91,13 @@ const parseCommand = async (client, item) => {
     console.info("Got menu request");
     response.content = await getMenu();
   } else if (message.match(getRegex("subscribe"))) {
-    const user = await client.getUserById(creatorId);
-    const timeZone = options["timezone"];
-    if (isValidTimeZone(timeZone)) {
-      response.content = await lunchManager.subscribe(
-        new lunchManager.LunchSubscription(
-          conversationId,
-          creatorId,
-          user.displayName,
-          timeZone,
-          convertCron(options["cron"])
-        )
-      );
-
-      const err = await lunchManager.updateCrons(client);
-      console.info(err);
-      if (err) {
-        response.content = "Could not create subscription";
-      }
-    } else {
-      response.content = "Could not subscribe. Timezone is invalid";
-    }
+    response.content = await commands.subscribe(
+      client,
+      creatorId,
+      conversationId,
+      lunchManager,
+      options
+    );
   } else if (message.match(getRegex("unsubscribe"))) {
     const user = await client.getUserById(creatorId);
     response.content = await lunchManager.unsubscribe(
@@ -153,6 +107,28 @@ const parseCommand = async (client, item) => {
     await lunchManager.updateCrons(client);
   } else if (message.match("source")) {
     response.content = "https://github.com/max-wittig/LunchBot";
+  } else if (message.match("show-subscription")) {
+    const showSubscription = await lunchManager.getSubscription(conversationId);
+    if (!showSubscription) {
+      response.content =
+        "Not subscribed yet. Use /subscribe to add a subscription";
+    } else {
+      response.content = JSON.stringify(showSubscription);
+    }
+  } else if (message.match("modify-subscription")) {
+    const showSubscription = await lunchManager.getSubscription(conversationId);
+    if (!showSubscription) {
+      response.content =
+        "Not subscribed yet. Use /subscribe to add a subscription";
+    } else {
+      response.content = await commands.modifySubscription(
+        lunchManager,
+        conversationId,
+        options
+      );
+    }
+  } else if (message.match("help")) {
+    response.content = await commands.help();
   }
 
   if (!response.content) {

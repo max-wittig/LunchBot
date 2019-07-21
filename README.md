@@ -60,6 +60,9 @@ You can requests the following information everytime, using slash command:
 * /status -> display status message, if bot is up and running
 * /menu -> show lunch menu for today
 * /source -> show source of the bot
+* /show-subscription -> show current subscription options
+* /modify-subscription -> modfiy subscription with new options
+* /help -> show all available commands
 
 ### Options
 
@@ -79,10 +82,12 @@ uuid: <some-uuid>
 Special command options:
 
 * timezone -> specifc the timezone the cron should be in. Defaults to `Europe/Zurich`
-* cron -> specifc custom menu cron. Defaults to `0 10 * * 1-5`
+* menuCron -> specifc custom menu cron. Defaults to `0 10 * * 1-5`
+* warningCron -> specifc custom warning cron. Defaults to `0 11 * * 1-5`
+* lunchCron -> specifc custom lunch cron. Defaults to `30 11 * * 1-5`
 
 ```
 @LunchBot /subscribe
 timezone: Europe/Zurich
-cron: 0 11 * * *
+warningCron: 0 11 * * *
 ```

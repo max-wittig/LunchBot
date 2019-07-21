@@ -38,8 +38,12 @@ client.addEventListener("itemAdded", async item => {
   if (itemCreator == client.loggedOnUser.userId) {
     return;
   }
-  await parseCommand(client, item);
-  await lunchManager.checkLunchResponse(client, item);
+  try {
+    await parseCommand(client, item);
+    await lunchManager.checkLunchResponse(client, item);
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 client.addEventListener("accessTokenRenewed", () => {
