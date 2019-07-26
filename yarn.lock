@@ -73,10 +73,10 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-circuit-sdk@^1.2.6100:
-  version "1.2.6100"
-  resolved "https://registry.yarnpkg.com/circuit-sdk/-/circuit-sdk-1.2.6100.tgz#946469f20324e56086cac84fb441ec9958224dd1"
-  integrity sha512-t7+0C8JxhW7PXqzU+pukLp79AjOeDPGKnijp0ays8APyWsMmoXaRI05KrgtIZdsyriK/S60SqvL9PNvYEJD5CA==
+circuit-sdk@^1.2.6402:
+  version "1.2.6402"
+  resolved "https://registry.yarnpkg.com/circuit-sdk/-/circuit-sdk-1.2.6402.tgz#6deacd05d5a7c1953b135ca92f217b6cf2a9c0c9"
+  integrity sha512-FvKquXi5eQYXNUPp+USt+DIHeoiSz0INfEO07KvH/H0TSqpuPSfv1mwPTD7vcta2Sv1p/Y1bimLSI8t7wZ8Flg==
   dependencies:
     ws "~3.3.3"
 
@@ -93,9 +93,9 @@ core-util-is@1.0.2:
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
 cron-parser@^2.11.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/cron-parser/-/cron-parser-2.12.0.tgz#05ae8c008025cecdd8778746626a183249ca300b"
-  integrity sha512-1GU6CQJ6gT9XDEGeTuzfhZgFMf82BSs3ihFA3i2wr4qGKJLhO1kOvaIF9biIo39CaPgzZ17U8FgYxRv/+UR50A==
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/cron-parser/-/cron-parser-2.13.0.tgz#6f930bb6f2931790d2a9eec83b3ec276e27a6725"
+  integrity sha512-UWeIpnRb0eyoWPVk+pD3TDpNx3KCFQeezO224oJIkktBrcW6RoAPOx5zIKprZGfk6vcYSmA8yQXItejSaDBhbQ==
   dependencies:
     is-nan "^1.2.1"
     moment-timezone "^0.5.25"
@@ -268,9 +268,9 @@ jsprim@^1.2.2:
     verror "1.10.0"
 
 lodash@^4.17.11:
-  version "4.17.14"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
-  integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
+  version "4.17.15"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
+  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
 memory-pager@^1.0.2:
   version "1.5.0"
